@@ -1,9 +1,8 @@
-express = require 'express'
-router = express.Router()
+express 	= require 'express'
+router 		= express.Router()
+ctrlMain 	= require '../controllers/main' 
 
 # GET home page.
-router.get '/', (req, res, next) ->
-  res.render 'index',
-    title: 'Express'
+router.get '/', ctrlMain.index
 
 module.exports = router

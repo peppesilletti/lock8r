@@ -5,6 +5,10 @@
   "scripts": {
     "start": "coffee ./bin/www"
   },
+  "engines": {
+    "node": "~4.5.0",
+    "npm": "~2.15.9"
+  },
   "dependencies": {
     "body-parser": "~1.10.2",
     "coffee-script": "^1.8.0",
