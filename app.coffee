@@ -1,17 +1,17 @@
-express = require 'express'
-path = require 'path'
-favicon = require 'serve-favicon'
-logger = require 'morgan'
+express      = require 'express'
+path         = require 'path'
+favicon      = require 'serve-favicon'
+logger       = require 'morgan'
 cookieParser = require 'cookie-parser'
-bodyParser = require 'body-parser'
+bodyParser   = require 'body-parser'
 
-routes = require './app_server/routes/index'
-users = require './app_server/routes/users'
+routes       = require './src/server/routes/index'
+users        = require './src/server/routes/users'
 
 app = express()
 
 # view engine setup
-app.set 'views', path.join __dirname, 'app_server', 'views'
+app.set 'views', path.join __dirname, 'src/server', 'views'
 app.set 'view engine', 'jade'
 
 # uncomment after placing your favicon in /public
