@@ -16,11 +16,7 @@
     "express": "~4.11.1",
     "jade": "~1.9.1",
     "morgan": "~1.5.1",
-    "serve-favicon": "~2.2.0"
-  },
-  "devDependencies": {
-    "coffee-script": "^1.10.0",
-    "gulp": "^3.9.1",
-    "id-project": "^2.14.0"
+    "serve-favicon": "~2.2.0",
+    "coffee-script": "~1.10.0"
   }
 }
