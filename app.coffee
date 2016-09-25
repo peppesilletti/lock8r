@@ -5,6 +5,8 @@ logger       = require 'morgan'
 cookieParser = require 'cookie-parser'
 bodyParser   = require 'body-parser'
 
+require "./src/server/models/db"
+
 routes       = require './src/server/routes/index'
 users        = require './src/server/routes/users'
 
