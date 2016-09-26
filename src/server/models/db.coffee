@@ -2,6 +2,10 @@ mongoose = require "mongoose"
 
 # Connect to the database
 dbURI = 'mongodb://localhost/Loc8r'
+
+if process.env.NODE_ENV == 'production'
+	dbURI = process.env.MONGOLAB_URI
+
 mongoose.connect dbURI
 
 # Listen to event
