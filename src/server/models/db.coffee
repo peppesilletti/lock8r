@@ -1,7 +1,5 @@
 mongoose = require "mongoose"
 
-console.log process.env.MONGOLAB_URI
-
 # Connect to the database
 dbURI = 'mongodb://localhost/Loc8r'
 
