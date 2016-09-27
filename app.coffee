@@ -5,9 +5,10 @@ logger       = require 'morgan'
 cookieParser = require 'cookie-parser'
 bodyParser   = require 'body-parser'
 
-require "./src/server/models/db"
+require "./src/api/models/db"
 
 routes       = require './src/server/routes/index'
+routesApi    = require './src/api/routes/index'
 users        = require './src/server/routes/users'
 
 app = express()
@@ -26,6 +27,7 @@ app.use cookieParser()
 app.use express.static path.join __dirname, 'public'
 
 app.use '/', routes
+app.use '/api', routesApi
 app.use '/users', users
 
 # catch 404 and forward to error handler
