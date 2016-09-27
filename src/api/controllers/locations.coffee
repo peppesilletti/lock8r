@@ -8,7 +8,8 @@ locationsCreate = (req, res) ->
 	sendJsonResponse res, 200, { "status" : "success" }
 
 locationsReadOne = (req, res) ->
-	sendJsonResponse res, 200, { "status" : "success" }
+	Loc.findById(req.params.locationid).exec = (err, location) -> 
+			sendJsonResponse res, 200, location 
 
 locationsUpdateOne = (req, res) ->
 	sendJsonResponse res, 200, { "status" : "success" }
