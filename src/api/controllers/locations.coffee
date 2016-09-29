@@ -8,8 +8,24 @@ locationsCreate = (req, res) ->
 	sendJsonResponse res, 200, { "status" : "success" }
 
 locationsReadOne = (req, res) ->
-	Loc.findById(req.params.locationid).exec = (err, location) -> 
-			sendJsonResponse res, 200, location 
+
+	if req.params && req.params.locationid 
+		Loc
+		.findById req.params.locationid, (err, location) ->
+			if !location
+				console.log "locationid not found"
+				sendJsonResponse res, 404, {message: "locationid not found"}
+				return
+			else if err
+				console.err err
+				sendJsonResponse res, 404, err
+				return
+
+			sendJsonResponse res, 200, location
+	else
+		console.log "No locationid in request"
+		sendJsonResponse res, 404, {message: "No locationid in request"}
+
 
 locationsUpdateOne = (req, res) ->
 	sendJsonResponse res, 200, { "status" : "success" }
