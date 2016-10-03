@@ -31,33 +31,24 @@ homelist 	 = (req, res) ->
 
  # GET 'Location info' page 
 locationInfo = (req, res) ->
-  res.render 'location-info', { 
-  		title: 'Location info',
 
-  		location: {
-  				name: 'Starcups',
-  				address: '125 High Street, Reading, RG6 1PS',
-  				rating: 3,
-  				facilities: ['Hot drinks', 'Food', 'Premium wifi'],
-  				distance: '100m',
-  				coords: [ lat: '51.455041', lng: '-0.9690884'],
-  				openHours: ['Monday - Friday : 7:00am - 7:00pm', 'Saturday : 8:00am - 5:00pm', 'Sunday : closed']
-		  		reviews: [
-		  			{
-		  				rating: 5,
-		  				author: 'Simon Holmes',
-		  				date: '16 July 2013',
-		  				text: "What a great place. I can't say enough good things about it."
-		  			},
-		  			{
-		  				rating: 3,
-		  				author: 'Giuseppe Silletti',
-		  				date: '16 July 2013',
-		  				text: "It was okay. Coffee wasn't great, but the wifi was fast."
-		  			}
-		  		]
-  		}
-  	}
+  path = "/api/locations/" + req.params.locationid
+
+  requestOptions = {
+    url : apiOption.server + path,
+    method : "GET",
+    json: {}
+  }
+
+  request requestOptions, (err, response, body) ->
+    data = body
+
+    data.coords = {
+      lng : body.coords[0],
+      lat : body.coords[1]
+    }
+
+    renderDetailPage req, res, data
 
 # GET 'Add review' page 
 addReview 	 = (req, res) ->
@@ -84,6 +75,21 @@ renderHomepage = (req, res, responseBody) ->
       locations: responseBody,
       message: message
       }
+
+
+renderDetailPage = (req, res, locDetail) ->
+  res.render 'location-info', {
+    title : locDetail.name,
+    pageHeader : {title: locDetail.name},
+    sidebar: {
+      context: 'is on Loc8r because it has accessible wifi and space to sit 
+      down with your laptop and get some work done.'
+      callToAction: 'If you\'ve been and you like it - or if you don\'t - 
+      please leave a review to help other people just like you.'
+    },
+    location: locDetail
+  }
+
 
 _formatDistance = (distance) ->
 

@@ -79,6 +79,7 @@ locationsCreate = (req, res) ->
 locationsReadOne = (req, res) ->
 
 	if req.params && req.params.locationid 
+		
 		Loc
 		.findById req.params.locationid, (err, location) ->
 			if !location

@@ -17,8 +17,13 @@ block content
             .panel-heading
               h2.panel-title Opening hours
             .panel-body
-              each hour in location.openHours
-                p= hour
+               each time in location.openingTimes
+                p
+                  | #{time.days} : 
+                  if time.closed
+                    | closed
+                  else
+                    | #{time.opening} - #{time.closing}
           .panel.panel-primary
             .panel-heading
               h2.panel-title Facilities
@@ -33,7 +38,7 @@ block content
             .panel-heading
               h2.panel-title Location map
             .panel-body
-              img.img-responsive.img-rounded(src='http://maps.googleapis.com/maps/api/staticmap?center=#{location.coords.lat},#{location.coords.lng}&zoom=17&size=400x350&sensor=false&markers=#{location.coords.lat},#{location.coords.lng}&scale=2')   
+              img.img-responsive.img-rounded(src="http://maps.googleapis.com/maps/api/staticmap?center=#{location.coords.lat},#{location.coords.lng}&zoom=17&size=400x350&sensor=false&markers=#{location.coords.lat},#{location.coords.lng}&scale=2")   
       .row
         .col-xs-12
           .panel.panel-primary.review-panel
@@ -47,10 +52,11 @@ block content
                     .well.well-sm.review-header
                         span.rating
                           +outputRating(review.rating)
-                        span.reviewAuthor= review.author
-                        small.reviewTimestamp= review.date
+                        span.reviewAuthor #{" " + review.author}
+                        small.reviewTimestamp
+                          +formatDate(review.createdOn)
                       .col-xs-12
-                        p= review.text
+                        p !{(review.reviewText).replace(/\n/g, '<br/>')}
     .col-xs-12.col-md-3
       p.lead
         | #{location.name} is on Loc8r because it has accessible wifi and space to sit down with your laptop and get some work done.
