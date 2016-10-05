@@ -2,6 +2,7 @@ mongoose = require 'mongoose'
 Loc = mongoose.model 'Location'
 
 doAddReview = (req, res, location) ->
+
 	if !location
 		sendJsonResponse res, 404, {
 			"message": "locationid not found"
@@ -14,6 +15,7 @@ doAddReview = (req, res, location) ->
 		}
 
 		location.save = (err, location) ->
+
 			if err
 				sendJsonResponse res, 400, err
 			else
@@ -45,9 +47,11 @@ doSetAverageRating = (location) ->
 
 reviewsCreate = (req, res) ->
 	locationid = req.params.locationid
+
 	if locationid
 		Loc
 		.findById locationid, 'reviews', (err, location) ->
+
 			if err
 				sendJsonResponse res, 400, err
 			else

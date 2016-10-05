@@ -31,30 +31,42 @@ homelist 	 = (req, res) ->
 
  # GET 'Location info' page 
 locationInfo = (req, res) ->
-
-  path = "/api/locations/" + req.params.locationid
-
-  requestOptions = {
-    url : apiOption.server + path,
-    method : "GET",
-    json: {}
-  }
-
-  request requestOptions, (err, response, body) ->
-    data = body
-
-    data.coords = {
-      lng : body.coords[0],
-      lat : body.coords[1]
-    }
-
-    renderDetailPage req, res, data
+  getLocationInfo req, res, (req, res, responseData) ->
+    renderDetailPage req, res, responseData
 
 # GET 'Add review' page 
 addReview 	 = (req, res) ->
-  res.render 'location-review-form', { title: 'Add review' }
+  getLocationInfo req, res, (req, res, responseData) ->
+    renderReviewForm req, res, responseData
+
+doAddReview  = (req, res) ->
+
+  locationid = req.params.locationid
+  path = "/api/locations/" + locationid + '/reviews'
+
+  postdata = {
+    author: req.body.name,
+    rating: parseInt req.body.rating, 10
+    reviewText: req.body.review
+  }
+
+  requestOptions = {
+    url: apiOption.server + path,
+    method: "POST",
+    json: postdata
+  }
+
+  console.log requestOptions.url
+
+  request requestOptions, (err, response, body) ->
+
+    if response.statusCode == 201
+      res.redirect '/location/' + locationid
+    else
+      _showError req, res, response.statusCode
 
 
+### Render functions ###
 renderHomepage = (req, res, responseBody) ->
 
   if !(responseBody instanceof Array)
@@ -91,6 +103,13 @@ renderDetailPage = (req, res, locDetail) ->
   }
 
 
+renderReviewForm = (req, res, locDetail) ->
+  res.render 'location-review-form', {
+    title: 'Review ' + locDetail.name + ' on Loc8r',
+    pageHeader: { title: 'Review ' + locDetail.name }
+  }
+
+### Utility functions ###
 _formatDistance = (distance) ->
 
   if !distance 
@@ -110,6 +129,44 @@ _formatDistance = (distance) ->
 
     numDistance + unit
 
+_showError = (req, res, status) ->
+  if status == 404
+    title = "404, page not found"
+    content = "Oh dear. Looks like we can't find this page. Sorry."
+  else
+    title = status + ", something's gone wrong"
+    content = "Something, somewhere, has gone just a little bit wrong."
+
+  res.status status
+  res.render 'generic-text', {
+    title : title,
+    content : content
+  }
+
+getLocationInfo = (req, res, callback) ->
+  path = '/api/locations/' + req.params.locationid
+  requestOptions = {
+    url : apiOption.server + path,
+    method : "GET",
+    json : {}
+  }
+
+  console.log requestOptions
+
+  request requestOptions, (err, response, body) ->
+
+    data = body
+
+    if response.statusCode == 200
+      data.coords = {
+        lng : body.coords[0],
+        lat : body.coords[1]
+      }
+      callback req, res, data
+    else
+      _showError req, res, response.statusCode
+
 module.exports.homelist 	= homelist
 module.exports.locationInfo = locationInfo
 module.exports.addReview 	= addReview
+module.exports.doAddReview = doAddReview
