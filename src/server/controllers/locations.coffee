@@ -56,14 +56,18 @@ doAddReview  = (req, res) ->
     json: postdata
   }
 
-  console.log requestOptions.url
+  if !postdata.author || !postdata.rating || !postdata.reviewText
+    res.redirect '/location/' + locationid + '/review/new?err=val'
+  else
+    request requestOptions, (err, response, body) ->
 
-  request requestOptions, (err, response, body) ->
-
-    if response.statusCode == 201
-      res.redirect '/location/' + locationid
-    else
-      _showError req, res, response.statusCode
+      if response.statusCode == 201
+        res.redirect '/location/' + locationid
+      else if response.statusCode == 400 && body.name && body.name == "ValidationError"
+        res.redirect '/location/' + locationid + '/review/new?err=val'
+      else
+        console.log body
+        _showError req, res, response.statusCode
 
 
 ### Render functions ###
@@ -106,7 +110,8 @@ renderDetailPage = (req, res, locDetail) ->
 renderReviewForm = (req, res, locDetail) ->
   res.render 'location-review-form', {
     title: 'Review ' + locDetail.name + ' on Loc8r',
-    pageHeader: { title: 'Review ' + locDetail.name }
+    pageHeader: { title: 'Review ' + locDetail.name },
+    error: req.query.err
   }
 
 ### Utility functions ###

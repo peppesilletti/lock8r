@@ -8,15 +8,17 @@ doAddReview = (req, res, location) ->
 			"message": "locationid not found"
 		}
 	else
+
 		location.reviews.push {
 			author: req.body.author,
 			rating: req.body.rating,
 			reviewText: req.body.reviewText
 		}
 
-		location.save = (err, location) ->
+		location.save (err, location) ->
 
 			if err
+				console.log err
 				sendJsonResponse res, 400, err
 			else
 				updateAverageRating location._id
@@ -34,7 +36,7 @@ doSetAverageRating = (location) ->
 	if location.reviews && location.reviews.length > 0 
 		reviewCount = location.reviews.length
 		ratingTotal = 0
-		ratingTotal = ratingTotal + location.reviews[i].rating for i in [0..reviewCount]
+		ratingTotal = ratingTotal + location.reviews[i].rating for i in [0..reviewCount - 1]
 		ratingAverage = parseInt ratingTotal / reviewCount, 10
 		location.rating = ratingAverage
 		location.save = (err) ->
